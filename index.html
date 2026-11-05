@@ -239,6 +239,28 @@
     openTab("search", button);
   });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+const solidaDB = window.supabase.createClient(
+  'https://vjeolkhiywsdbbezfbmm.supabase.co',
+  'sb_publishable_Lfk07NJHXRRMV6BzNJYItA_5Qke-MVC'
+);
+
+async function checkSolidaDB() {
+  const { data, error } = await solidaDB
+    .from('tracks')
+    .select('*');
+
+  const status = document.createElement('p');
+  status.textContent = error
+    ? 'Ошибка подключения к базе'
+    : 'Solida: база данных подключена';
+
+  document.body.appendChild(status);
+}
+
+checkSolidaDB();
+</script>
 </body>
 </html>
