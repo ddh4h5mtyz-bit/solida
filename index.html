@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101014">
+  <title>Solida Music</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 18px;
+      background: #101014;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+    }
+
+    .logo span {
+      color: #a879ff;
+    }
+
+    .subtitle {
+      color: #85838f;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .profile {
+      background: #24222c;
+      border-radius: 50%;
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+
+    .search {
+      width: 100%;
+      padding: 16px;
+      background: #211f28;
+      border: 1px solid #302d39;
+      border-radius: 15px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 17px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .empty {
+      background: #1c1a22;
+      border-radius: 17px;
+      padding: 25px 18px;
+      text-align: center;
+      color: #96929f;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .empty-icon {
+      font-size: 35px;
+      margin-bottom: 10px;
+    }
+
+    .tabs {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #19171f;
+      border-top: 1px solid #302d39;
+      display: flex;
+      justify-content: space-around;
+      padding: 13px 5px 22px;
+    }
+
+    .tab {
+      background: none;
+      border: none;
+      color: #898592;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .tab span {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 5px;
+    }
+
+    .tab.active {
+      color: #b68aff;
+    }
+
+    main {
+      padding-bottom: 90px;
+    }
+
+    .status {
+      color: #a879ff;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <div class="logo">solida<span>.</span></div>
+    <div class="subtitle">Твоя музыка. Твоё пространство.</div>
+  </div>
+  <div class="profile">♪</div>
+</header>
+
+<main>
+  <input
+    class="search"
+    id="search"
+    type="search"
+    placeholder="⌕  Найти музыку..."
+  >
+
+  <section class="section" id="content">
+    <h2>Добро пожаловать в Solida</h2>
+
+    <div class="empty">
+      <div class="empty-icon">♫</div>
+      <div>Твоя музыкальная библиотека</div>
+      <div class="status">Скоро здесь появятся треки</div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs">
+  <button class="tab active" onclick="openTab('home', this)">
+    <span>⌂</span>Главная
+  </button>
+
+  <button class="tab" onclick="openTab('search', this)">
+    <span>⌕</span>Поиск
+  </button>
+
+  <button class="tab" onclick="openTab('library', this)">
+    <span>♫</span>Медиатека
+  </button>
+
+  <button class="tab" onclick="openTab('favorites', this)">
+    <span>♡</span>Избранное
+  </button>
+</nav>
+
+<script>
+  const tg = window.Telegram?.WebApp;
+
+  if (tg) {
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor("#101014");
+    tg.setBackgroundColor("#101014");
+  }
+
+  const content = document.getElementById("content");
+
+  function openTab(tab, button) {
+    document.querySelectorAll(".tab").forEach(item => {
+      item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    const pages = {
+      home: `
+        <h2>Добро пожаловать в Solida</h2>
+        <div class="empty">
+          <div class="empty-icon">♫</div>
+          Твоя музыкальная библиотека
+          <div class="status">Скоро здесь появятся треки</div>
+        </div>
+      `,
+      search: `
+        <h2>Поиск музыки</h2>
+        <div class="empty">
+          <div class="empty-icon">⌕</div>
+          Поиск по музыкальному каталогу появится после подключения сервера.
+        </div>
+      `,
+      library: `
+        <h2>Медиатека</h2>
+        <div class="empty">
+          <div class="empty-icon">♫</div>
+          Здесь будут твои плейлисты и сохранённые треки.
+        </div>
+      `,
+      favorites: `
+        <h2>Избранное</h2>
+        <div class="empty">
+          <div class="empty-icon">♡</div>
+          Здесь будут любимые композиции.
+        </div>
+      `
+    };
+
+    content.innerHTML = pages[tab];
+  }
+
+  document.getElementById("search").addEventListener("focus", () => {
+    const button = document.querySelectorAll(".tab")[1];
+    openTab("search", button);
+  });
+</script>
+
+</body>
+</html>
